@@ -1,0 +1,16 @@
+{
+  "menu": [
+    {
+      "url": "/",
+      "name": "Dashboards",
+      "icon": "menu-icon tf-icons mdi mdi-home-outline",
+      "slug": "dashboard"
+    },
+    {
+      "url": "/dbf/trading_down",
+      "name": "Trading",
+      "icon": "menu-icon tf-icons mdi mdi-home-outline",
+      "slug": "Trading"
+    }
+  ]
+}
