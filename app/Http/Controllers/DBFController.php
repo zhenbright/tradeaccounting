@@ -108,16 +108,16 @@ class DBFController extends Controller
         $tableReader->close();
         $tableReader = new TableReader(database_path('db\purdtl.DBF'));
         
-        while ($record = $tableReader->nextRecord()) 
-            if (isset($records[$record->get('code')])) $records[$record->get('code')]['qty'] += $record->get('qty');
+        // while ($record = $tableReader->nextRecord()) 
+        //     if (isset($records[$record->get('code')])) $records[$record->get('code')]['qty'] += $record->get('qty');
         
-        // die;
+        // // die;
 
-        $tableReader->close();
-        $tableReader = new TableReader(database_path('db\billdtl.DBF'));
+        // $tableReader->close();
+        // $tableReader = new TableReader(database_path('db\billdtl.DBF'));
         
-        while ($record = $tableReader->nextRecord()) 
-            if (isset($records[$record->get('code')])) $records[$record->get('code')]['qty'] -= $record->get('qty');
+        // while ($record = $tableReader->nextRecord()) 
+        //     if (isset($records[$record->get('code')])) $records[$record->get('code')]['qty'] -= $record->get('qty');
         // // // die;
 
         if ($request->ajax()) {
@@ -163,6 +163,14 @@ class DBFController extends Controller
 
     public function saveRecords(Request $request) {
 
+        // $ddd =  $request['dt_Date'];
+        // echo $ddd;
+        // die;
+        // $record->date_format("YYYYMMDD")
+        // echo $record->date_format($ddd,"YYYYMMDD");
+        // die;
+        // echo $request['dt_Date'];
+        // die;
         $tableDataes = $request->tableData;
 
         $filePath = database_path('db\TRANSFER.DBF');
@@ -174,12 +182,15 @@ class DBFController extends Controller
         $tableWriter = new TableEditor($filePath);
 
         // Create a new record
-        $record = $tableWriter->appendRecord();
+
 
         // Set values for the record
-        // $columns = $tableWriter->getColumns();
+        $columns = $tableWriter->getColumns();
+
+
 
         foreach($tableDataes as $tableData) {
+            $record = $tableWriter->appendRecord();
             $record->set('SERIES', 'T');
             $record->set('BILL',$request['bill']);
             $record->set('DATE',$request['dt_Date']);
@@ -210,6 +221,11 @@ class DBFController extends Controller
             $record->set('EXP_C',null);
             $record->set('REF_NO',null);
             $record->set('TRF_TO',null);
+            // $tableWriter
+            $tableWriter
+            ->writeRecord()
+            ->save();
+   
         }
 
         // foreach ($columns as $column) {
@@ -228,10 +244,7 @@ class DBFController extends Controller
         //         break;
         //     }
         // }
-        $tableWriter
-            ->writeRecord()
-            ->save()
-            ->close();
+        $tableWriter->close();
 
         return ['success' => true, 'record' => $record] ;
 

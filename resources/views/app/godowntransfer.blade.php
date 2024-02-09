@@ -321,7 +321,12 @@
 
         $('#AddRecord').click(function() {
 
+            
             let dt_date = $('#dt_date').val();
+            if(dt_date.length == 0 ) return ;
+            let myArry = dt_date.split('-');
+            dt_date = myArry[0].concat(myArry[1].concat(myArry[2]));
+            
             tabledata = [];
             $("#transfer-table tbody").children('tr').map((e, item)=> {
                 var rowData = {};
@@ -344,7 +349,8 @@
                     tableData: tabledata
                 },
                 success : function(res){
-                    alert("Success!");
+                    // alert("Success!");
+                    alert(res);
                     tabledata = {};
                 },
                 error: function(err) {
