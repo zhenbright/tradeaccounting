@@ -5,7 +5,6 @@
     position: absolute;
     top: 0;
     left: 0;
-
 }
 .navbar {
     background-color: #22222288;
@@ -16,7 +15,6 @@
 #special-text{
     color:black !important;
 }
-
 
 .nav-left{
     flex-basis: 30%;
