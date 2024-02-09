@@ -18,6 +18,8 @@
 
 Route::get('/','DBFController@welcome');
 
+
+
 Route::middleware(['auth'])->group(function ()  {
     Route::get('/home', 'HomeController@index')->name('home');
     
@@ -29,6 +31,7 @@ Route::middleware(['auth'])->group(function ()  {
     });
     Route::post('/dbf/saveRecords', "DBFController@saveRecords");
     
+
 });
 
 Auth::routes();
