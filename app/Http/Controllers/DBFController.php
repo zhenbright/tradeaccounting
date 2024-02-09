@@ -108,17 +108,17 @@ class DBFController extends Controller
         $tableReader->close();
         $tableReader = new TableReader(database_path('db\purdtl.DBF'));
         
-        // while ($record = $tableReader->nextRecord()) 
-        //     if (isset($records[$record->get('code')])) $records[$record->get('code')]['qty'] += $record->get('qty');
+        while ($record = $tableReader->nextRecord()) 
+            if (isset($records[$record->get('code')])) $records[$record->get('code')]['qty'] += $record->get('qty');
         
-        // // die;
+        // die;
 
-        // $tableReader->close();
-        // $tableReader = new TableReader(database_path('db\billdtl.DBF'));
+        $tableReader->close();
+        $tableReader = new TableReader(database_path('db\billdtl.DBF'));
         
-        // while ($record = $tableReader->nextRecord()) 
-        //     if (isset($records[$record->get('code')])) $records[$record->get('code')]['qty'] -= $record->get('qty');
-        // // // die;
+        while ($record = $tableReader->nextRecord()) 
+            if (isset($records[$record->get('code')])) $records[$record->get('code')]['qty'] -= $record->get('qty');
+        // die;
 
         if ($request->ajax()) {
             $utf8Data = array_map(function ($item) {
