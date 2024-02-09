@@ -1,0 +1,25 @@
+#layout-menu {
+    background-color: #1a1919 !important;
+}
+#layout-navbar {
+    background-color: #1a1919;
+    border-radius: none !important;
+}
+.dataTables_filter label , .dataTables_length label {
+    display: flex !important;
+}
+.dataTables_filter input {
+    margin-left: 5px;
+}
+#transfer-table {
+    margin-top: 20px;
+}
+#from-godown, #to-godown {
+    margin-left: 10px;
+}
+
+@media screen and (max-width : 650px){
+    .stock {
+        margin: 0 15px;
+    }
+}
