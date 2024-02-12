@@ -107,9 +107,19 @@ class DBFController extends Controller
 
         $tableReader->close();
         $tableReader = new TableReader(database_path('db\purdtl.DBF'));
+        // $columns = ['amt10','net10', 'gd10', 'gst10','ok','unit_no'];
+        while ($record = $tableReader->nextRecord()) {
+
         
-        while ($record = $tableReader->nextRecord()) 
-            if (isset($records[$record->get('code')])) $records[$record->get('code')]['qty'] += $record->get('qty');
+            if (isset($records[$record->get('code')])) {
+                $records[$record->get('code')]['qty'] += $record->get('qty');
+                // die;
+            }
+            // foreach($columns as $column) {
+            //     $records[$record->get('code')][$column] = $record->get($column);
+            // }
+
+        }
         
         // die;
 
@@ -128,7 +138,6 @@ class DBFController extends Controller
             foreach ($utf8Data as $key => $value) {
                 $res[] = $value;
             }
-            // print_r($res);die;
             return ['data' => $res];
         } else
             return ['data' => $records];
@@ -195,6 +204,44 @@ class DBFController extends Controller
             $record->set('BILL',$request['bill']);
             $record->set('DATE',$request['dt_Date']);
             $record->set('CODE',$tableData['code']);
+            $record->set('GDN_CODE',$request['go']); 
+            $record->set('UNIT',$tableData['unit_1']);
+            $record->set('MULT_F',$tableData['mult_f']);
+            $record->set('TRADE',$request['fromdown']);
+            $record->set('MRP',$tableData['mrp1']);
+            $record->set('RATE',$tableData['rate1']);
+            $record->set('QTY',$tableData['qty']);
+
+            $record->set('BATCH_NO',null);
+            $record->set('EXPIRY',null);
+            $record->set('LST',null);
+            $record->set('GST',null);
+            $record->set('SNO',null);
+            $record->set('BILL2',null);
+            $record->set('AMT10',null);
+            $record->set('NET10',null);
+            $record->set('GD10',null);
+            $record->set('GST10',null);
+            $record->set('GR_CODE9',null);
+            $record->set('PRODUCT',$tableData['product']);
+            $record->set('PACK',$tableData['pack']);
+            $record->set('OK',$tableData['ok']);
+            $record->set('UNIT_NO',null);
+            $record->set('EXP_C',null);
+            $record->set('REF_NO',null);
+            $record->set('TRF_TO',null);
+            // $tableWriter
+            $tableWriter
+            ->writeRecord()
+            ->save();
+
+
+            $record = $tableWriter->appendRecord();
+            $record->set('SERIES', 'T');
+            $record->set('BILL',$request['bill']);
+            $record->set('DATE',$request['dt_Date']);
+            $record->set('CODE',$tableData['code']);
+            $record->set('GDN_CODE',$request['todown']); 
             $record->set('GDN_CODE',null); 
             $record->set('UNIT',$tableData['unit_1']);
             $record->set('MULT_F',$tableData['mult_f']);
@@ -225,7 +272,7 @@ class DBFController extends Controller
             $tableWriter
             ->writeRecord()
             ->save();
-   
+            
         }
 
         // foreach ($columns as $column) {

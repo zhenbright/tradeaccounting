@@ -45,7 +45,7 @@
                                             <option></option>
                                             
                                             @foreach($godowns as $godown)
-                                                <option value="{{$godown['gdn_name']}}">{{$godown['gdn_name']}}</option>
+                                                <option value="{{$godown['gdn_code']}}">{{$godown['gdn_name']}}</option>
                                             @endforeach
                                         </select>
                                     <!-- </div> -->
@@ -58,7 +58,7 @@
                                         <select id="to-godown" class="form-control dt-input" onchange = "getGoDown()">
                                             <option></option>
                                             @foreach($godowns as $godown)
-                                                <option value="{{$godown['gdn_name']}}" >{{$godown['gdn_name']}}</option>
+                                                <option value="{{$godown['gdn_code']}}" >{{$godown['gdn_name']}}</option>
                                             @endforeach
                                         </select>
                                     <!-- </div> -->
@@ -196,7 +196,7 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
 
-                            <div class="modal-body" id="modal_alert_text"> Are you sure you want to permanently delete this item?
+                            <div class="modal-body" id="modal_alert_text"> 
                             </div>
 
                             <div class="modal-footer">
@@ -219,19 +219,15 @@
     var columnData = columns.map(c => { return { data: c }; });
 
 
-
+    var to-gown,from-gown;
     function getGoDown() {
             
 
-
-
-
-            let go,from;
-            go = $("#to-godown").val();
-            from = $("#from-godown").val();
+            to-gown = $("#to-godown").val();
+            from-gown = $("#from-godown").val();
             // alert(go);
             // alert(from);
-            if(go ==  from) {
+            if(go-down ==  from-down) {
                 // alert("Same Gown Transfer not Allowed.. Please change Godown Code");
                 $("#to-godown").val("");
                 $("#modalAlert").modal('show');
@@ -346,11 +342,13 @@
                     series : 'T',
                     bill : '{{$max + 1}}',
                     dt_Date : dt_date,
-                    tableData: tabledata
+                    tableData: tabledata,
+                    fromdown : from-down,
+                    todown : to-down
                 },
                 success : function(res){
-                    // alert("Success!");
-                    alert(res);
+                     alert("Success!");
+                 //   alert(res);
                     tabledata = {};
                 },
                 error: function(err) {

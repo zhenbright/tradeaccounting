@@ -46,7 +46,7 @@
                                 <a class="nav-link" style="color:#544f5a" href="{{ route('login') }}">{{ __('Login') }}</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link"style="color:#544f5a"  href="{{ route('register') }}">{{ __('Register') }}</a>
+                                <a class="nav-link"style="color:#544f5a"  href="{{url('/register')}}">{{ __('Register') }}</a>
                             </li>
                         @else
                             <li class="nav-item dropdown">

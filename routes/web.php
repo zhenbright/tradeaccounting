@@ -18,9 +18,10 @@
 
 Route::get('/','DBFController@welcome');
 
+Route::get('/user/login','UserController@login');
+Route::get('/user/register','UserController@register');
 
-
-Route::middleware(['auth'])->group(function ()  {
+Route::middleware(['dbfuser'])->group(function ()  {
     Route::get('/home', 'HomeController@index')->name('home');
     
     Route::get('/dbf/getRecords', 'DBFController@getRecords');

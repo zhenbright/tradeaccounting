@@ -3,10 +3,18 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use XBase\Table;
+use XBase\Table\Table;
 use XBase\TableReader;
-use XBase\TableWriter;
+
 use XBase\TableEditor;
+use XBase\Record\RecordFactory;
+use XBase\Record\RecordInterface;
+use App\Models\DbfModel;
+use App\DBF;
+use DB;
+
+use Session;
+
 class UserController extends Controller
 {
     //
@@ -16,40 +24,48 @@ class UserController extends Controller
 
     public function Login(Request $request) {
 
-        $tableReader = new TableReader(database_path('db\TRANSFER.DBF'));
+        $tableReader = new TableReader(database_path('db\users.DBF'));
 
         // $columns = ['UseID','Password'];
         while ($record = $tableReader->nextRecord()) {
-            $userid = $record.get('UserID');
-            $pass = $record.get('Password');
-            if($userid == $request['userid'] && $pass == $request['pass']) {
-                return ['success' => ture,'userid' => $userid];
+            $userid = $record->get('UserID');
+            $pass = $record->get('Password');
+            if($userid == $request['userID'] && $pass == $request['password']) {
+                Session::put('userid', $userid);
+                return redirect('/dashboard');
             } 
         }
-        return ['success' => false];
-         
+        return redirect('/login');
+        // Session::put('userid', $userid);
+        // return ['success' => false];
 
     }
 
     public function Register(Request $request) {
 
-        $filePath = database_path('db\TRANSFER.DBF');
+        $filePath = database_path('db\users.DBF');
 
-        // Create a new table
-        $table = new Table($filePath);
+        $tableReader = new TableReader($filePath);
 
-        // Create a TableWriter instance
+        while($record = $tableReader->nextRecord()) {
+            if($record->get('UserID') == $request['userID']) {
+                return redirect('/register');
+            }
+        }
+
         $tableWriter = new TableEditor($filePath);
         $record = $tableWriter->appendRecord();
-        
         $record->set('ID',1);
         $record->set('Name',$request['name']);
-        $record->set('UserID',$request['userid']);
-        $record->set('pass',$request['pass']);
+        $record->set('UserID',$request['userID']);
+        $record->set('Password',$request['password']);
 
+        Session::put('userid',$request['userID']);
         $tableWriter
         ->writeRecord()
         ->save()
         ->close();
+        return redirect('/dashboard');
+        // return window.location(url("/dbf"));
     }
 }
