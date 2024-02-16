@@ -9,7 +9,15 @@
         <!-- Advanced Search -->
         <div class="card">
             <div class ="card-header d-flex justify-content-end">
-                <button class="btn btn-info mx-2"> Print </button>
+                <form id="pdf-form" method="get" action="{{url('pdf')}}">
+                    <input type="hidden" id="pdfname" name = "pdfname" />
+                    <input type="hidden" id="tabledata" name = "tabledata" />
+                    <input type="hidden" id="fromdown" name = "fromdown" />
+                    <input type="hidden" id="todown" name = "todown" />
+                    <input type="hidden" id="date" name = "date" />
+                    <input type="hidden" id="tot" name = "tot" />
+                </form>
+                <button class="btn btn-info mx-2" id = "printpdf"> Print </button>
                 <button class="btn btn-success" id = "AddRecord"> Add Record </button>
             </div>
             <div class="card-body">
@@ -43,9 +51,10 @@
                                     <!-- <div class="col-md-9"> -->
                                         <select id="from-godown" class="form-control dt-input col-md-9" onchange="getGoDown()">
                                             <option></option>
-                                            
+                                            <?php $i = 0;?>
                                             @foreach($godowns as $godown)
-                                                <option value="{{$godown['gdn_code']}}">{{$godown['gdn_name']}}</option>
+                                                <?php $i ++;?>
+                                                <option value="{{$i}}">{{$godown['gdn_name']}}</option>
                                             @endforeach
                                         </select>
                                     <!-- </div> -->
@@ -57,8 +66,10 @@
                                     <!-- <div class="col-md-9"> -->
                                         <select id="to-godown" class="form-control dt-input" onchange = "getGoDown()">
                                             <option></option>
+                                            <?php $i = 0;?>
                                             @foreach($godowns as $godown)
-                                                <option value="{{$godown['gdn_code']}}" >{{$godown['gdn_name']}}</option>
+                                            <?php $i ++; ?>
+                                                <option value="{{$i}}" >{{$godown['gdn_name']}}</option>
                                             @endforeach
                                         </select>
                                     <!-- </div> -->
@@ -121,7 +132,7 @@
                     <div class="row my-5">
                         <div class="col-md-8 by-1">
                             <span >Total Items</span>
-                            <input type="text" class="col-1 dt-input" id="tot-item" placeholder="Series" value = "0">
+                            <input type="text" class="col-1 dt-input" id="tot-item" placeholder="Series" value = "0" readonly>
                         </div>
                         <div class="col-md-4 d-flex justify-content-around">
                             <span>Net Amount</span>
@@ -215,30 +226,36 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
     var columns = JSON.parse(`<?php echo json_encode($fields)?>`);
+    var jsonString = `<?php echo json_encode($godowns)?>`;
+    var godowns = eval("(" + jsonString + ")");
+// console.log(godowns);
 
     var columnData = columns.map(c => { return { data: c }; });
 
-
-    var to-gown,from-gown;
+    
+    var to_gown,from_gown;
     function getGoDown() {
             
 
-            to-gown = $("#to-godown").val();
-            from-gown = $("#from-godown").val();
-            // alert(go);
-            // alert(from);
-            if(go-down ==  from-down) {
+            $to = $("#to-godown").val();
+            $from = $("#from-godown").val();
+            to_gown = `${godowns[$to - 1]['gdn_code']}`;
+            from_gown = `${godowns[$from - 1]['gdn_code']}`;
+            // alert(from_gown);
+            if($to ==  $from) {
                 // alert("Same Gown Transfer not Allowed.. Please change Godown Code");
                 $("#to-godown").val("");
+                $to = 0;
                 $("#modalAlert").modal('show');
                 $("#modal_alert_text").text("Same Gown Transfer not Allowed.. Please change Godown Code");
                 // $("#from-godown").
             }
-        }
-
+        };
 
 
     $(document).ready(function() {
+
+
         // $('#transfer-table').DataTable({
         //     serverSide: false, // Since data is fetched from DBF directly
         //     processing: true,
@@ -250,8 +267,7 @@
         var n_col, n_dt;
         var $tot_item = 0;
         var tabledata = [];
-        // alert();
-        // $("#DeleteDiv").css("display","none");
+
         $("#btn-select-item").click(function () {
 
             if (Object.keys(rowData).length == 0) return;
@@ -343,8 +359,8 @@
                     bill : '{{$max + 1}}',
                     dt_Date : dt_date,
                     tableData: tabledata,
-                    fromdown : from-down,
-                    todown : to-down
+                    fromdown : from-gown,
+                    todown : to-gown
                 },
                 success : function(res){
                      alert("Success!");
@@ -355,6 +371,47 @@
                     console.error(err);
                 }
             })
+        });
+
+
+        $("#printpdf").click(function() {
+            //
+            //
+            //
+            tabledata = [];
+            $("#transfer-table tbody").children('tr').map((e, item)=> {
+                var rowData = {};
+
+                $(item).children('td').map((i, td) => {
+                    if ($(td).data('key').trim().length > 0)
+                        rowData[$(td).data('key')] = $(td).text();
+                })
+                
+                tabledata.push(rowData);
+            })
+            // alert(tabledata);
+            // console.log(tabledata);
+
+            let dt_date = $('#dt_date').val();
+
+            // if(dt_date.length == 0 ) return ;
+            // let myArry = dt_date.split('-');
+            // dt_date = myArry[0].concat(myArry[1].concat(myArry[2]));
+
+            // alert();
+            $to = $("#to-godown").val();
+            $from = $("#from-godown").val();
+            if($to == 0 || $from == 0) return ;
+            let from_gown = `${godowns[$from-1]['gdn_name']}`;
+            let to_gown = `${godowns[$to-1]['gdn_name']}`;
+            let tot = $("#tot-item").val();
+            $("#date").val(dt_date);
+            $("#fromdown").val(from_gown);
+            $("#todown").val(to_gown);
+            $("#pdfname").val("{{$max + 1}}");
+            $("#tabledata").val(JSON.stringify(tabledata));
+            $("#tot").val(tot);
+            $("#pdf-form").submit();
         });
         
 
@@ -404,6 +461,8 @@
             $("#DeleteDiv").css("display","none");
             $("#OpenDiv").css("display","block");
             $("#EditDiv").hide();
+            let tot = $("#tot-item").val();
+            $("#tot-item").val(tot - 1);
         });
 
         $("#SaveBtn").click(function () {

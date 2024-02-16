@@ -106,29 +106,21 @@ class DBFController extends Controller
         // die;
 
         $tableReader->close();
-        $tableReader = new TableReader(database_path('db\purdtl.DBF'));
-        // $columns = ['amt10','net10', 'gd10', 'gst10','ok','unit_no'];
-        while ($record = $tableReader->nextRecord()) {
+        // $tableReader = new TableReader(database_path('db\purdtl.DBF'));
+        // while ($record = $tableReader->nextRecord()) {
 
-        
-            if (isset($records[$record->get('code')])) {
-                $records[$record->get('code')]['qty'] += $record->get('qty');
-                // die;
-            }
-            // foreach($columns as $column) {
-            //     $records[$record->get('code')][$column] = $record->get($column);
-            // }
+        //     if (isset($records[$record->get('code')])) {
+        //         $records[$record->get('code')]['qty'] += $record->get('qty');
+        //     }
 
-        }
-        
-        // die;
+        // }
 
-        $tableReader->close();
-        $tableReader = new TableReader(database_path('db\billdtl.DBF'));
+        // $tableReader->close();
+        // $tableReader = new TableReader(database_path('db\billdtl.DBF'));
         
-        while ($record = $tableReader->nextRecord()) 
-            if (isset($records[$record->get('code')])) $records[$record->get('code')]['qty'] -= $record->get('qty');
-        // die;
+        // while ($record = $tableReader->nextRecord()) 
+        //     if (isset($records[$record->get('code')])) $records[$record->get('code')]['qty'] -= $record->get('qty');
+
 
         if ($request->ajax()) {
             $utf8Data = array_map(function ($item) {

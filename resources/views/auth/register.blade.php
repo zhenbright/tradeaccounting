@@ -1,3 +1,24 @@
+<?php 
+    if( !Session::has('userid') ) {
+
+    
+        echo "<script>alert('UserID has already been taken.')</script>";
+        // $str = 
+        // "<span class='invalid-feedback' role='alert'>
+        //     <strong>
+        //         {{ $errors->first('userID') }}
+        //     </strong>
+        //     </span>";
+        // // echo "$('#usrid').append($str)";
+        // echo $str;
+        // die;
+
+    }
+    //     echo "<script>$('#userid').innerHTML('<span class='invalid-feedback' role='alert'><strong>{{ $errors->first('userID') }}</strong>
+    // </span>')</script>";
+?>
+
+
 @extends('layouts.app')
 
 @section('content')
@@ -33,7 +54,7 @@
                         <div class="form-group row">
                             <label for="userID" class="col-md-4 col-form-label text-md-right">{{ __('User ID') }}</label>
 
-                            <div class="col-md-6">
+                            <div class="col-md-6" id = "userid">
                                 <input id="userID"  class="form-control{{ $errors->has('userID') ? ' is-invalid' : '' }}" name="userID" value="{{ old('userID') }}" required>
 
                                 @if ($errors->has('userID'))

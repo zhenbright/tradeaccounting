@@ -1,3 +1,9 @@
+<?php 
+    if( Session::has('userid') ) {
+        echo "<script>alert('UserID or Password incorrect.')</script>";
+    }
+?>
+
 @extends('layouts.app')
 
 @section('content')

@@ -31,7 +31,8 @@ Route::middleware(['dbfuser'])->group(function ()  {
         return view('layouts.contentNavbarLayout');
     });
     Route::post('/dbf/saveRecords', "DBFController@saveRecords");
-    
+
+    Route::get('/pdf','PdfController@generatePdf');
 
 });
 
